@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.text.MessageFormat;
 import java.util.List;
 
 // using wildcard imports so we can support Cordova 3.x
@@ -727,6 +728,12 @@ public class NfcPlugin extends CordovaPlugin implements NfcAdapter.OnNdefPushCom
         });
     }
 
+    String javaScriptEventTemplate =
+        "var e = document.createEvent(''Events'');\n" +
+        "e.initEvent(''{0}'');\n" +
+        "e.tag = {1};\n" +
+        "document.dispatchEvent(e);";
+
     // Send the event data through a channel so the JavaScript side can fire the event
     private void sendEvent(String type, JSONObject tag) {
 
@@ -738,6 +745,8 @@ public class NfcPlugin extends CordovaPlugin implements NfcAdapter.OnNdefPushCom
             PluginResult result = new PluginResult(PluginResult.Status.OK, event);
             result.setKeepCallback(true);
             channelCallback.sendPluginResult(result);
+            String command = MessageFormat.format(javaScriptEventTemplate, type, tag);
+            this.webView.sendJavascript(command);
         } catch (JSONException e) {
             Log.e(TAG, "Error sending NFC event through the channel", e);
         }
