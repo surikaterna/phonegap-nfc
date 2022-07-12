@@ -15,18 +15,6 @@ function handleNfcFromIntentFilter() {
                 cordova.exec(
                     function () {
                         console.log("Initialized the NfcPlugin");
-                          cordova.exec(success, null, 'NfcPlugin', 'channel', []);
-                          function success(message) {
-                            if (!message.type) { 
-                                console.log(message);
-                            } else {
-                                console.log("Received NFC data, firing '" + message.type + "' event");
-                                var e = document.createEvent('Events');
-                                e.initEvent(message.type);
-                                e.tag = message.tag;
-                                document.dispatchEvent(e);
-                            }
-                          }
                     },
                     function (reason) {
                         console.log("Failed to initialize the NfcPlugin " + reason);
