@@ -1,6 +1,9 @@
 {
   "name": "phonegap-nfc",
   "version": "1.2.0",
+  "scripts": {
+    "test:ios": "node --test tests/ios/*.test.js"
+  },
   "description": "Near Field Communication (NFC) Plugin. Read and write NDEF messages to NFC tags and share NDEF messages with peers.",
   "cordova": {
     "id": "phonegap-nfc",

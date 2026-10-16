@@ -64,6 +64,17 @@ See [Getting Started](https://github.com/chariotsolutions/phonegap-nfc/blob/mast
 
 ## iOS Notes
 
+This fork defaults to a single `TAG` reader-session entitlement for both Debug
+and Release builds. This configuration is for iOS 13+ and avoids the legacy
+`NDEF` entitlement rejected by modern App Store validation. It does not raise
+the Lynx application's existing iOS 16.0 deployment target. NDEF messages are
+still supported; the entitlement name is distinct from the NDEF data format.
+
+For an intentionally legacy iOS 11/12 NDEF-only build using a suitable older
+SDK, install with `--variable IOS_NFC_READER_SESSION_FORMAT=NDEF`. Do not use
+that option for modern iOS 16+/TestFlight builds. The plugin does not lower or
+override the application's deployment target.
+
 Reading NFC NDEF tags is supported on iPhone 7 (and newer) since iOS 11. iOS 13 added support for writing NDEF messages to NFC tags. iOS 13 also adds the ability to get the UID from some NFC tags. On iOS, the user must start a NFC session to scan for a tag. This is different from Android which can constantly scan for NFC tags. The [nfc.scanNdef](#nfcscanndef) and [nfc.scanTag](#nfcscantag) functions start a NFC scanning session. The NFC tag is returned to the caller via a Promise. If your existing code uses the deprecated [nfc.beginSession](#nfcbeginsession), update it to use `nfc.scanNdef`.
 
 The `scanNdef` function uses [NFCNDEFReaderSession](https://developer.apple.com/documentation/corenfc/nfcndefreadersession) to detect NFC Data Exchange Format (NDEF) tags. `scanTag` uses the newer [NFCTagReaderSession](https://developer.apple.com/documentation/corenfc/nfctagreadersession) available in iOS 13 to detect ISO15693, FeliCa, and MIFARE tags. The `scanTag` function will include the tag UID and tag type for *some* NFC tags along with the NDEF messages. `scanTag` can also read some RFID tags without NDEF messsages. `scanTag` will not scan some NDEF tags including Topaz and Mifare Classic. 
